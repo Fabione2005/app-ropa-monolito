@@ -12,6 +12,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../../services/api';
 import Colors from '../../constants/Colors';
 
@@ -45,9 +46,21 @@ export default function RegisterScreen() {
         telefono: telefono.trim(),
         acepta_terminos: aceptaTerminos,
       });
-      Alert.alert('¡Cuenta creada!', 'Tu cuenta fue creada exitosamente.', [
-        { text: 'OK', onPress: () => router.replace('/(auth)/login') },
-      ]);
+
+      // Auto-login tras el registro exitoso
+      const { data } = await api.post('/api/v1/auth/login', {
+        email: email.trim(),
+        password,
+      });
+      await AsyncStorage.setItem('token', data.token);
+      await AsyncStorage.setItem('user', JSON.stringify({
+        id: data.id,
+        nombre_completo: data.nombre_completo,
+        email: data.email,
+        points_balance: data.points_balance,
+      }));
+
+      router.replace('/(tabs)/home');
     } catch (error: any) {
       const message =
         error.response?.data?.message ??
