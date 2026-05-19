@@ -1,5 +1,7 @@
 package com.friapp.auth.controller;
 
+import com.friapp.auth.dto.LoginRequest;
+import com.friapp.auth.dto.LoginResponse;
 import com.friapp.auth.dto.RegistroRequest;
 import com.friapp.auth.dto.RegistroResponse;
 import com.friapp.auth.service.AuthService;
@@ -23,5 +25,10 @@ public class AuthController {
     @ResponseStatus(HttpStatus.CREATED)
     public RegistroResponse registro(@Valid @RequestBody RegistroRequest request) {
         return authService.registrar(request);
+    }
+
+    @PostMapping("/login")
+    public LoginResponse login(@Valid @RequestBody LoginRequest request) {
+        return authService.login(request);
     }
 }

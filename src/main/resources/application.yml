@@ -39,3 +39,8 @@ logging:
   level:
     com.friapp: INFO
     org.flywaydb: INFO
+
+app:
+  jwt:
+    secret: ZnJpYXBwLWp3dC1zZWNyZXQtZGV2LTIwMjYtZG8tbm90LXVzZS1pbi1wcm9kdWN0aW9uLWNoYW5nZS1tZQ==
+    expiration-days: 7
