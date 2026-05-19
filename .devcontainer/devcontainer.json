@@ -41,7 +41,6 @@
     "8080": { "label": "Spring Boot API", "onAutoForward": "notify" },
     "5432": { "label": "PostgreSQL", "onAutoForward": "silent" }
   },
-  "postCreateCommand": "bash .devcontainer/post-create.sh",
   "remoteEnv": {
     "SPRING_PROFILES_ACTIVE": "dev",
     "SPRING_DATASOURCE_URL": "jdbc:postgresql://localhost:5432/friapp_dev",
