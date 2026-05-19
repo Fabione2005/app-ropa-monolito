@@ -11,7 +11,7 @@ services:
   app:
     image: mcr.microsoft.com/devcontainers/java:21-bullseye
     volumes:
-      - ../..:/workspace:cached          # Monta el repo completo
+      - ../..:/workspace/app-ropa-monolito:cached          # Monta el repo completo
       - maven-cache:/root/.m2            # Caché de dependencias Maven (persiste entre rebuilds)
     working_dir: /workspace
     command: sleep infinity              # El devcontainer lo mantiene vivo
