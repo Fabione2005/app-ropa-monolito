@@ -26,6 +26,7 @@ export default function RegisterScreen() {
   const [aceptaTerminos, setAceptaTerminos] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
   const isFormComplete =
     nombre.trim() !== '' &&
@@ -38,6 +39,7 @@ export default function RegisterScreen() {
     if (!isFormComplete) return;
 
     setLoading(true);
+    setErrorMsg('');
     try {
       await api.post('/api/v1/auth/registro', {
         nombre_completo: nombre.trim(),
@@ -62,11 +64,13 @@ export default function RegisterScreen() {
 
       router.replace('/(tabs)/home');
     } catch (error: any) {
-      const message =
-        error.response?.data?.message ??
+      console.log(error.response);
+      const mensaje =
         error.response?.data?.error ??
+        error.response?.data?.message ??
         'Ocurrió un error. Intenta de nuevo.';
-      Alert.alert('Error', message);
+      setErrorMsg(mensaje);
+      Alert.alert('Error', mensaje);
     } finally {
       setLoading(false);
     }
@@ -180,6 +184,11 @@ export default function RegisterScreen() {
           )}
         </TouchableOpacity>
 
+        {/* Error inline (visible también en web) */}
+        {errorMsg !== '' && (
+          <Text style={styles.errorText}>{errorMsg}</Text>
+        )}
+
         {/* Separador */}
         <View style={styles.divider}>
           <View style={styles.dividerLine} />
@@ -235,6 +244,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: Colors.text,
     marginBottom: 32,
+  },
+  errorText: {
+    color: '#E53935',
+    fontSize: 13,
+    textAlign: 'center',
+    marginTop: 10,
+    marginBottom: 4,
   },
   inputWrapper: {
     borderWidth: 1,
