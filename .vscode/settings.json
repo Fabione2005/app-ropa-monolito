@@ -1,0 +1,15 @@
+{
+  "sqltools.connections": [
+    {
+      "name": "friapp_dev (local)",
+      "driver": "PostgreSQL",
+      "server": "localhost",
+      "port": 5432,
+      "database": "friapp_dev",
+      "username": "friapp",
+      "password": "friapp_secret",
+      "previewLimit": 50,
+      "ssl": false
+    }
+  ]
+}
