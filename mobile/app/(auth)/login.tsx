@@ -24,6 +24,7 @@ export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const [recuerdame, setRecuerdame] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorMensaje, setErrorMensaje] = useState<string>('');
 
   const isFormComplete = email.trim() !== '' && password.trim() !== '';
 
@@ -31,6 +32,7 @@ export default function LoginScreen() {
     if (!isFormComplete) return;
 
     setLoading(true);
+    setErrorMensaje('');
     try {
       const { data } = await api.post('/api/v1/auth/login', {
         email: email.trim(),
@@ -47,12 +49,12 @@ export default function LoginScreen() {
 
       router.replace('/(tabs)/home');
     } catch (error: any) {
-      const status = error.response?.status;
-      const message =
-        status === 401
-          ? 'Email o contraseña incorrectos'
-          : error.response?.data?.message ?? 'Ocurrió un error. Intenta de nuevo.';
-      Alert.alert('Error', message);
+      const mensaje =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        'Ocurrió un error. Intenta de nuevo.';
+      setErrorMensaje(mensaje);
+      Alert.alert('Error', mensaje);
     } finally {
       setLoading(false);
     }
@@ -83,7 +85,7 @@ export default function LoginScreen() {
             placeholder="Email"
             placeholderTextColor={Colors.placeholder}
             value={email}
-            onChangeText={setEmail}
+            onChangeText={(v) => { setEmail(v); setErrorMensaje(''); }}
             keyboardType="email-address"
             autoCapitalize="none"
             autoCorrect={false}
@@ -97,7 +99,7 @@ export default function LoginScreen() {
             placeholder="Contraseña"
             placeholderTextColor={Colors.placeholder}
             value={password}
-            onChangeText={setPassword}
+            onChangeText={(v) => { setPassword(v); setErrorMensaje(''); }}
             secureTextEntry={!showPassword}
             autoCapitalize="none"
           />
@@ -140,6 +142,11 @@ export default function LoginScreen() {
             <Text style={styles.primaryButtonText}>ENTRAR</Text>
           )}
         </TouchableOpacity>
+
+        {/* Error inline (visible también en web) */}
+        {errorMensaje !== '' && (
+          <Text style={styles.errorText}>{errorMensaje}</Text>
+        )}
 
         {/* Link a registro */}
         <View style={styles.registerRow}>
@@ -243,12 +250,19 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: Colors.placeholder,
   },
+  errorText: {
+    color: '#E53935',
+    fontSize: 13,
+    textAlign: 'center',
+    marginTop: 10,
+    marginBottom: 4,
+  },
   primaryButton: {
     backgroundColor: Colors.primary,
     borderRadius: 10,
     paddingVertical: 16,
     alignItems: 'center',
-    marginBottom: 40,
+    marginBottom: 16,
   },
   primaryButtonDisabled: {
     backgroundColor: Colors.border,
@@ -263,6 +277,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 20,
   },
   registerText: {
     fontSize: 14,

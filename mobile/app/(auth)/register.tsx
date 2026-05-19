@@ -26,7 +26,7 @@ export default function RegisterScreen() {
   const [aceptaTerminos, setAceptaTerminos] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
+  const [errorMensaje, setErrorMensaje] = useState<string>('');
 
   const isFormComplete =
     nombre.trim() !== '' &&
@@ -39,7 +39,7 @@ export default function RegisterScreen() {
     if (!isFormComplete) return;
 
     setLoading(true);
-    setErrorMsg('');
+    setErrorMensaje('');
     try {
       await api.post('/api/v1/auth/registro', {
         nombre_completo: nombre.trim(),
@@ -66,10 +66,10 @@ export default function RegisterScreen() {
     } catch (error: any) {
       console.log(error.response);
       const mensaje =
-        error.response?.data?.error ??
-        error.response?.data?.message ??
+        error.response?.data?.error ||
+        error.response?.data?.message ||
         'Ocurrió un error. Intenta de nuevo.';
-      setErrorMsg(mensaje);
+      setErrorMensaje(mensaje);
       Alert.alert('Error', mensaje);
     } finally {
       setLoading(false);
@@ -101,7 +101,7 @@ export default function RegisterScreen() {
             placeholder="Nombre y Apellido"
             placeholderTextColor={Colors.placeholder}
             value={nombre}
-            onChangeText={setNombre}
+            onChangeText={(v) => { setNombre(v); setErrorMensaje(''); }}
             autoCapitalize="words"
           />
         </View>
@@ -113,7 +113,7 @@ export default function RegisterScreen() {
             placeholder="Email"
             placeholderTextColor={Colors.placeholder}
             value={email}
-            onChangeText={setEmail}
+            onChangeText={(v) => { setEmail(v); setErrorMensaje(''); }}
             keyboardType="email-address"
             autoCapitalize="none"
             autoCorrect={false}
@@ -127,7 +127,7 @@ export default function RegisterScreen() {
             placeholder="Contraseña"
             placeholderTextColor={Colors.placeholder}
             value={password}
-            onChangeText={setPassword}
+            onChangeText={(v) => { setPassword(v); setErrorMensaje(''); }}
             secureTextEntry={!showPassword}
             autoCapitalize="none"
           />
@@ -146,7 +146,7 @@ export default function RegisterScreen() {
             placeholder="Número de teléfono"
             placeholderTextColor={Colors.placeholder}
             value={telefono}
-            onChangeText={setTelefono}
+            onChangeText={(v) => { setTelefono(v); setErrorMensaje(''); }}
             keyboardType="numeric"
           />
           <Text style={styles.verifyLabel}>Verificar</Text>
@@ -185,8 +185,8 @@ export default function RegisterScreen() {
         </TouchableOpacity>
 
         {/* Error inline (visible también en web) */}
-        {errorMsg !== '' && (
-          <Text style={styles.errorText}>{errorMsg}</Text>
+        {errorMensaje !== '' && (
+          <Text style={styles.errorText}>{errorMensaje}</Text>
         )}
 
         {/* Separador */}
