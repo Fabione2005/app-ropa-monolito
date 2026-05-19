@@ -2,7 +2,7 @@
   "name": "FRI APP — Java 21 + Spring Boot",
   "dockerComposeFile": "docker-compose.yml",
   "service": "app",
-  "workspaceFolder": "/workspace",
+  "workspaceFolder": "/workspaces/app-ropa-monolito",
 
   // ── Features instaladas en el contenedor ──
   "features": {
